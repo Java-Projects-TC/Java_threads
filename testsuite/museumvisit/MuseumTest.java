@@ -19,6 +19,7 @@ public class MuseumTest {
     Museum museum = Museum.buildSimpleMuseum();
     assertTrue(museum.getEntrance() instanceof Entrance);
     assertTrue(museum.getExit() instanceof Exit);
+    museum.getEntrance().enter();
 
     assertTrue(museum.getEntrance().getExitTurnstiles().size() == 1);
     assertTrue(museum.getEntrance().getExitTurnstiles().get(0)
@@ -39,6 +40,7 @@ public class MuseumTest {
     Museum museum = Museum.buildLoopyMuseum();
     assertTrue(museum.getEntrance() instanceof Entrance);
     assertTrue(museum.getExit() instanceof Exit);
+    museum.getEntrance().enter();
 
     assertTrue(museum.getEntrance().getExitTurnstiles().size() == 1);
     assertTrue(museum.getEntrance().getExitTurnstiles().get(0)

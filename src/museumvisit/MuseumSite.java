@@ -16,17 +16,15 @@ public abstract class MuseumSite {
     this.exitTurnstiles = new ArrayList<>();
   }
 
-  boolean hasAvailability() {
-    return true;
-  }
+  abstract boolean hasAvailability();
 
   public void enter() {
-    // to be implemented
+    occupancy++;
   }
 
   public void exit() {
     assert occupancy > 0;
-    // to be implemented
+    occupancy--;
   }
 
   public void addExitTurnstile(Turnstile turnstile) {
@@ -53,7 +51,7 @@ public abstract class MuseumSite {
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof MuseumSite) {
-      return name.equals(((MuseumSite) obj).name);
+      return this.name.equals(((MuseumSite) obj).getName());
     } else {
       return false;
     }

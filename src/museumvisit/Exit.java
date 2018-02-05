@@ -6,4 +6,8 @@ public class Exit extends MuseumSite {
     super("Exit");
   }
 
+  @Override
+  boolean hasAvailability() {
+    return true;
+  }
 }

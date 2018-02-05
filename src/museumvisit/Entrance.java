@@ -6,4 +6,8 @@ public class Entrance extends MuseumSite {
     super("Entrance");
   }
 
+  @Override
+  boolean hasAvailability() {
+    return true;
+  }
 }

@@ -1,5 +1,6 @@
 package museumvisit;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Museum {
@@ -41,8 +42,13 @@ public class Museum {
   }
 
   public static Museum buildSimpleMuseum() {
-    // to be implemented
-    return null;
+    Entrance entrance = new Entrance();
+    ExhibitionRoom exhibitionRoom = new ExhibitionRoom("Exhibition room", 10);
+    Exit exit = new Exit();
+    entrance.addExitTurnstile(new Turnstile(entrance, exhibitionRoom));
+    exhibitionRoom.addExitTurnstile(new Turnstile(exhibitionRoom, exit));
+    Set<MuseumSite> sites; // = new set(exhibitionRoom)
+    return new Museum(entrance, exit, sites);
   }
 
   public static Museum buildLoopyMuseum() {
