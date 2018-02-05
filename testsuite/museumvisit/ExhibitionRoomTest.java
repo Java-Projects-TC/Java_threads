@@ -37,4 +37,20 @@ public class ExhibitionRoomTest {
 
   }
 
+  @Test
+  public void hasAvailability2() {
+    ExhibitionRoom room = new ExhibitionRoom("room", 1);
+
+    assertEquals(0, room.getOccupancy());
+    assertTrue(room.hasAvailability());
+    room.enter();
+
+    assertEquals(1, room.getOccupancy());
+    assertFalse(room.hasAvailability());
+
+    room.exit();
+    assertEquals(0, room.getOccupancy());
+    assertTrue(room.hasAvailability());
+  }
+
 }

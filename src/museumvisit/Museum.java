@@ -1,7 +1,10 @@
 package museumvisit;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Museum {
 
@@ -45,15 +48,32 @@ public class Museum {
     Entrance entrance = new Entrance();
     ExhibitionRoom exhibitionRoom = new ExhibitionRoom("Exhibition room", 10);
     Exit exit = new Exit();
+
     entrance.addExitTurnstile(new Turnstile(entrance, exhibitionRoom));
     exhibitionRoom.addExitTurnstile(new Turnstile(exhibitionRoom, exit));
-    Set<MuseumSite> sites; // = new set(exhibitionRoom)
+
+    // Used streams here to create the set using as little code as possible
+    Set<MuseumSite> sites = Stream.of(exhibitionRoom)
+        .collect(Collectors.toSet());
+
     return new Museum(entrance, exit, sites);
   }
 
   public static Museum buildLoopyMuseum() {
-    // to be implemented
-    return null;
+    Entrance entrance = new Entrance();
+    ExhibitionRoom venomRoom = new ExhibitionRoom("Venom room", 10);
+    ExhibitionRoom whaleRoom = new ExhibitionRoom("Whale room", 10);
+    Exit exit = new Exit();
+
+    entrance.addExitTurnstile(new Turnstile(entrance, venomRoom));
+    venomRoom.addExitTurnstile(new Turnstile(venomRoom, whaleRoom));
+    whaleRoom.addExitTurnstile(new Turnstile(whaleRoom, venomRoom));
+    venomRoom.addExitTurnstile(new Turnstile(venomRoom, exit));
+
+    Set<MuseumSite> sites = Stream.of(venomRoom, whaleRoom)
+        .collect(Collectors.toSet());
+
+    return new Museum(entrance, exit, sites);
   }
 
   public Entrance getEntrance() {
