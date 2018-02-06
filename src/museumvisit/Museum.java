@@ -1,9 +1,10 @@
 package museumvisit;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Museum {
@@ -19,13 +20,26 @@ public class Museum {
   }
 
   public static void main(String[] args) {
-    final int numberOfVisitors = 100; // Your solution has to work with any
-    // number of visitors
-    final Museum museum = buildSimpleMuseum(); // buildLoopyMuseum();
+    // Your solution has to work with any number of visitors.
+    final int numberOfVisitors = 100;
+    final Museum museum = buildLoopyMuseum(); // buildSimpleMuseum();
 
     // create the threads for the visitors and get them moving
+    List<Thread> visitors = new ArrayList<>();
+    IntStream.range(0, numberOfVisitors).sequential().forEach(i -> {
+      Thread visitorThread =
+          new Thread(new Visitor("Vis" + i, museum.getEntrance()));
+      visitors.add(visitorThread);
+      visitorThread.start();
+    });
 
     // wait for them to complete their visit
+    visitors.forEach(v -> {
+      try {
+        v.join();
+      } catch (InterruptedException e) {
+      }
+    });
 
     // Checking no one is left behind
     if (museum.getExit().getOccupancy() == numberOfVisitors) {
@@ -36,6 +50,7 @@ public class Museum {
               + " visitors did not reach the exit. Where are they?\n");
     }
 
+    // check no all rooms but the exit are empty
     System.out.println(
         "Occupancy status for each room (should all be zero, but the exit site):");
     museum.getSites().forEach(s -> {
@@ -45,10 +60,12 @@ public class Museum {
   }
 
   public static Museum buildSimpleMuseum() {
+    // Create rooms
     Entrance entrance = new Entrance();
     ExhibitionRoom exhibitionRoom = new ExhibitionRoom("Exhibition room", 10);
     Exit exit = new Exit();
 
+    // Create turnstiles
     entrance.addExitTurnstile(new Turnstile(entrance, exhibitionRoom));
     exhibitionRoom.addExitTurnstile(new Turnstile(exhibitionRoom, exit));
 
@@ -56,23 +73,29 @@ public class Museum {
     Set<MuseumSite> sites = Stream.of(exhibitionRoom)
         .collect(Collectors.toSet());
 
+    // Create Museum
     return new Museum(entrance, exit, sites);
   }
 
   public static Museum buildLoopyMuseum() {
+    // Create rooms
     Entrance entrance = new Entrance();
     ExhibitionRoom venomRoom = new ExhibitionRoom("Venom room", 10);
     ExhibitionRoom whaleRoom = new ExhibitionRoom("Whale room", 10);
     Exit exit = new Exit();
 
+    // Create turnstiles
     entrance.addExitTurnstile(new Turnstile(entrance, venomRoom));
     venomRoom.addExitTurnstile(new Turnstile(venomRoom, whaleRoom));
     whaleRoom.addExitTurnstile(new Turnstile(whaleRoom, venomRoom));
     venomRoom.addExitTurnstile(new Turnstile(venomRoom, exit));
 
+    // again used streams. I acknowledge the fact that I could have created a
+    // hash set and added the rooms but this requires 3 lines of code.
     Set<MuseumSite> sites = Stream.of(venomRoom, whaleRoom)
         .collect(Collectors.toSet());
 
+    // Create Museum
     return new Museum(entrance, exit, sites);
   }
 
@@ -84,7 +107,6 @@ public class Museum {
     return exit;
   }
 
-  public Set<MuseumSite> getSites() {
-    return sites;
-  }
+  public Set<MuseumSite> getSites() { return sites; }
+
 }

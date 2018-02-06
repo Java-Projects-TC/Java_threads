@@ -11,17 +11,36 @@ public class Turnstile {
     assert !originRoom.equals(destinationRoom);
     this.originRoom = originRoom;
     this.destinationRoom = destinationRoom;
-    // complete here if needed
   }
 
   public Optional<MuseumSite> passToNextRoom() {
-    // assertions for exiting entire museum or not
-    if (this.destinationRoom.hasAvailability()) {
-      this.originRoom.exit();
-      this.destinationRoom.enter();
-      return Optional.of(this.destinationRoom);
-    } else
-      return Optional.empty();
+    // assertions for exiting entire museum or not??
+
+    // Determine ordering between the two rooms joined bt the turnstile in
+    // order to remove the circular dependency;
+    MuseumSite firstRoomToLock, secondRoomToLock;
+    if (originRoom.getName().compareTo(destinationRoom.getName()) < 0) {
+      firstRoomToLock = originRoom;
+      secondRoomToLock = destinationRoom;
+    } else {
+      firstRoomToLock = destinationRoom;
+      secondRoomToLock = originRoom;
+    }
+
+    // lock the rooms in order to carry out the code in the critical region.
+    synchronized (firstRoomToLock) {
+      synchronized (secondRoomToLock) {
+
+        // critical region
+        if (this.destinationRoom.hasAvailability()) {
+          originRoom.exit();
+          destinationRoom.enter();
+          return Optional.of(destinationRoom);
+        } else {
+          return Optional.empty();
+        }
+      }
+    }
   }
 
   public MuseumSite getOriginRoom() {

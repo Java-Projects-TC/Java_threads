@@ -3,6 +3,7 @@ package museumvisit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Visitor implements Runnable {
 
@@ -14,19 +15,27 @@ public class Visitor implements Runnable {
     this.currentRoom = initialRoom;
   }
 
+  /*
+  public Visitor(String name) {
+    this(name, new Entrance());
+  }
+  */
+
   public void run() {
     while (thereAreMoreSitesToVisit()) {
       simulateVisitToCurrentRoom();
 
-      /*
-       * 1. pick a random turnstile
-       * 2. try to go through it.
-       * 2a) if successful (i.e., passToNextRoom() returned a MuseumSite),
-       * the returned site will be the next currentRoom to be visited
-       * 2b) if unsuccessful (i.e., passToNextRoom() returned an empty Optional),
-       * waitSomeTimeBeforeRetrying(), and then retry from step 1.
-       */
+      // Pick a random turnstile and try to go through it.
+      Optional<MuseumSite> nextRoom = pickRandomTurnstile().passToNextRoom();
 
+      // if successful, set the current room to the new room.
+      if (nextRoom.isPresent()) {
+        this.currentRoom = nextRoom.get();
+
+        // if unsuccessful wait some time then end the loop.
+      } else {
+        waitSomeTimeBeforeRetrying();
+      }
     }
   }
 
@@ -38,8 +47,9 @@ public class Visitor implements Runnable {
     List<Turnstile> exitTurnstiles = currentRoom.getExitTurnstiles();
     assert !exitTurnstiles.isEmpty();
 
-    Collections.shuffle(exitTurnstiles); // Random shuffle of the list of
-    // turnstiles
+    // Random shuffle of the list of turnstiles.
+    Collections.shuffle(exitTurnstiles);
+
     return exitTurnstiles.stream().findAny().get();
   }
 
@@ -47,6 +57,7 @@ public class Visitor implements Runnable {
     System.out.println(
         "Visitor " + name + ": visiting room: " + currentRoom.getName());
     final int randomVisitTimeInMillis = (int) (Math.random() * 200) + 1;
+
     // wait between 1  and  200 millis
     try {
       Thread.sleep(randomVisitTimeInMillis);

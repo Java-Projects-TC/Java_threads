@@ -22,9 +22,13 @@ public abstract class MuseumSite {
     occupancy++;
   }
 
+  // Confusion about the try catch loop here
   public void exit() {
-    assert occupancy > 0;
-    occupancy--;
+    try {
+      assert occupancy > 0;
+      occupancy--;
+    } catch (AssertionError nothing) {
+    }
   }
 
   public void addExitTurnstile(Turnstile turnstile) {

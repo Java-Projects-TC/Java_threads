@@ -2,13 +2,13 @@ package museumvisit;
 
 public class ExhibitionRoom extends MuseumSite {
 
+  // final??
   private int capacity;
 
   public ExhibitionRoom(String name, int capacity) {
     super(name);
     assert capacity > 0;
     this.capacity = capacity;
-    // complete here if needed
   }
 
   public int getCapacity() {
