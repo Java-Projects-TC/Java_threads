@@ -23,6 +23,7 @@ public class Museum {
     // Your solution has to work with any number of visitors.
     final int numberOfVisitors = 100;
     final Museum museum = buildLoopyMuseum(); // buildSimpleMuseum();
+    // buildTinyMuseum();
 
     // create the threads for the visitors and get them moving
     List<Thread> visitors = new ArrayList<>();
@@ -70,7 +71,7 @@ public class Museum {
     exhibitionRoom.addExitTurnstile(new Turnstile(exhibitionRoom, exit));
 
     // Used streams here to create the set using as little code as possible
-    Set<MuseumSite> sites = Stream.of(exhibitionRoom)
+    Set<MuseumSite> sites = Stream.of(entrance, exhibitionRoom, exit)
         .collect(Collectors.toSet());
 
     // Create Museum
@@ -92,12 +93,26 @@ public class Museum {
 
     // again used streams. I acknowledge the fact that I could have created a
     // hash set and added the rooms but this requires 3 lines of code.
-    Set<MuseumSite> sites = Stream.of(venomRoom, whaleRoom)
+    Set<MuseumSite> sites = Stream.of(entrance, venomRoom, whaleRoom, exit)
         .collect(Collectors.toSet());
 
     // Create Museum
     return new Museum(entrance, exit, sites);
   }
+
+  public static Museum buildTinyMuseum() {
+    Entrance entrance = new Entrance();
+    Exit exit = new Exit();
+
+    entrance.addExitTurnstile(new Turnstile(entrance, exit));
+
+    Set<MuseumSite> sites = Stream.of(entrance, exit)
+        .collect(Collectors.toSet());
+
+    return new Museum(entrance, exit, sites);
+  }
+
+  //public static Museum buildBigMuseum() {}
 
   public Entrance getEntrance() {
     return entrance;
@@ -107,6 +122,8 @@ public class Museum {
     return exit;
   }
 
-  public Set<MuseumSite> getSites() { return sites; }
+  public Set<MuseumSite> getSites() {
+    return sites;
+  }
 
 }

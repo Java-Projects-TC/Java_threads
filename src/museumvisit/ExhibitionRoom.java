@@ -2,8 +2,7 @@ package museumvisit;
 
 public class ExhibitionRoom extends MuseumSite {
 
-  // final??
-  private int capacity;
+  private final int capacity;
 
   public ExhibitionRoom(String name, int capacity) {
     super(name);

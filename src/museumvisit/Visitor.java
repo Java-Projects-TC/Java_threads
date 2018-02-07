@@ -13,6 +13,7 @@ public class Visitor implements Runnable {
   public Visitor(String name, MuseumSite initialRoom) {
     this.name = name;
     this.currentRoom = initialRoom;
+    this.currentRoom.enter();
   }
 
   /*
@@ -31,7 +32,6 @@ public class Visitor implements Runnable {
       // if successful, set the current room to the new room.
       if (nextRoom.isPresent()) {
         this.currentRoom = nextRoom.get();
-
         // if unsuccessful wait some time then end the loop.
       } else {
         waitSomeTimeBeforeRetrying();

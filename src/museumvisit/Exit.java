@@ -7,7 +7,7 @@ public class Exit extends MuseumSite {
   }
 
   @Override
-  public boolean hasAvailability() {
+  boolean hasAvailability() {
     return true;
   }
 }
