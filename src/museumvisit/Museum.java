@@ -13,7 +13,7 @@ public class Museum {
   private final Exit exit;
   private final Set<MuseumSite> sites;
 
-  public Museum(Entrance entrance, Exit exit, Set<MuseumSite> sites) {
+  private Museum(Entrance entrance, Exit exit, Set<MuseumSite> sites) {
     this.entrance = entrance;
     this.exit = exit;
     this.sites = sites;
@@ -23,7 +23,7 @@ public class Museum {
     // Your solution has to work with any number of visitors.
     final int numberOfVisitors = 100;
     final Museum museum = buildLoopyMuseum(); // buildSimpleMuseum();
-    // buildTinyMuseum();
+    // buildTinyMuseum(); buildScienceMuseum();
 
     // create the threads for the visitors and get them moving
     List<Thread> visitors = new ArrayList<>();
@@ -112,7 +112,52 @@ public class Museum {
     return new Museum(entrance, exit, sites);
   }
 
-  //public static Museum buildBigMuseum() {}
+  public static Museum buildScienceMuseum() {
+    // Create rooms
+    Entrance entrance = new Entrance();
+    ExhibitionRoom energyHall = new ExhibitionRoom("Energy Hall", 100);
+    ExhibitionRoom exploringSpace = new ExhibitionRoom("Exploring Space", 20);
+    ExhibitionRoom imaxTheatre = new ExhibitionRoom("Imax Theatre", 50);
+    ExhibitionRoom journeyThroughMedicine = new ExhibitionRoom("Journey "
+        + "Through Medicine", 15);
+    ExhibitionRoom spaceDescentVR = new ExhibitionRoom("Space Descent VR",
+        10);
+    ExhibitionRoom wonderlabGallery = new ExhibitionRoom("Wonderlab Gallery",
+        25);
+    Exit exit = new Exit();
+
+    // Create Turnstiles
+    entrance.addExitTurnstile(new Turnstile(entrance, energyHall));
+    entrance.addExitTurnstile(new Turnstile(entrance, wonderlabGallery));
+    wonderlabGallery.addExitTurnstile(new Turnstile(wonderlabGallery,
+        energyHall));
+    energyHall.addExitTurnstile(new Turnstile(energyHall,
+        journeyThroughMedicine));
+    energyHall.addExitTurnstile(new Turnstile(energyHall,
+        exploringSpace));
+    energyHall.addExitTurnstile(new Turnstile(energyHall,
+        exit));
+    exploringSpace.addExitTurnstile(new Turnstile(exploringSpace,
+        spaceDescentVR));
+    exploringSpace.addExitTurnstile(new Turnstile(exploringSpace,
+        energyHall));
+    spaceDescentVR.addExitTurnstile(new Turnstile(spaceDescentVR,
+        exploringSpace));
+    journeyThroughMedicine.addExitTurnstile(new Turnstile(journeyThroughMedicine,
+        energyHall));
+    journeyThroughMedicine.addExitTurnstile(new Turnstile(journeyThroughMedicine,
+        imaxTheatre));
+    imaxTheatre.addExitTurnstile(new Turnstile(imaxTheatre,
+        exit));
+
+    // Create set of sites
+    Set<MuseumSite> sites = Stream.of(entrance, energyHall, exploringSpace,
+        imaxTheatre, journeyThroughMedicine, spaceDescentVR, wonderlabGallery,
+        exit).collect(Collectors.toSet());
+
+    // Create Museum
+    return new Museum(entrance, exit, sites);
+   }
 
   public Entrance getEntrance() {
     return entrance;
@@ -122,7 +167,7 @@ public class Museum {
     return exit;
   }
 
-  public Set<MuseumSite> getSites() {
+  private Set<MuseumSite> getSites() {
     return sites;
   }
 

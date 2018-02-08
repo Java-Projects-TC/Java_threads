@@ -9,6 +9,9 @@ import org.junit.Test;
 
 public class TurnstileTest {
 
+  // Want to add a test in here to test locking done in turnstile but don't
+  // know how/ whether it's a good idea or not.
+
   @Test
   public void checkEnterExitProtocol() {
     ExhibitionRoom roomFrom = new ExhibitionRoom("roomFrom", 1);

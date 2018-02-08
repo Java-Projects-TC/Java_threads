@@ -7,12 +7,25 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
 
 public class MuseumTest {
+
+  @Test
+  public void TinyMuseumTopology() {
+    Museum museum = Museum.buildTinyMuseum();
+    assertTrue(museum.getEntrance() instanceof Entrance);
+    assertTrue(museum.getExit() instanceof Exit);
+    museum.getEntrance().enter();
+
+    assertTrue(museum.getEntrance().getExitTurnstiles().size() == 1);
+    assertTrue(museum.getEntrance().getExitTurnstiles().get(0)
+        .getDestinationRoom() instanceof Exit);
+  }
 
   @Test
   public void simpleMuseumTopology() {
@@ -77,24 +90,64 @@ public class MuseumTest {
 
   @Test
   public void theMuseumsTopologiesAreConnected() {
+    theTopologyIsConnected(Museum.buildTinyMuseum());
     theTopologyIsConnected(Museum.buildSimpleMuseum());
     theTopologyIsConnected(Museum.buildLoopyMuseum());
+    theTopologyIsConnected(Museum.buildScienceMuseum());
+  }
+
+  @Test(timeout = 5000)
+  public void aVisitToTheTinyMuseumMostLikelyTerminates() {
+    final Museum museum = Museum.buildTinyMuseum();
+    aVisitMostLikelyTerminates(museum, 50);
   }
 
   @Test(timeout = 5000)
   public void aVisitToTheSimpleMuseumMostLikelyTerminates() {
     final Museum museum = Museum.buildSimpleMuseum();
-    aVisitMostLikelyTerminates(museum);
+    aVisitMostLikelyTerminates(museum, 50);
   }
 
   @Test(timeout = 5000)
   public void aVisitToTheLoopyMuseumMostLikelyTerminates() {
     final Museum museum = Museum.buildLoopyMuseum();
-    aVisitMostLikelyTerminates(museum);
+    aVisitMostLikelyTerminates(museum, 50);
   }
 
-  private void aVisitMostLikelyTerminates(Museum museum) {
-    final int numberOfVisitors = 50;
+  @Test(timeout = 14000)
+  public void aLargeVisitToTheLoopyMuseumMostLikelyTerminates() {
+    final Museum museum = Museum.buildLoopyMuseum();
+    aVisitMostLikelyTerminates(museum, 400);
+  }
+
+  @Test(timeout = 8000)
+  public void aRandomVisitToTheLoopyMuseumMostLikelyTerminates() {
+    int randNumVisitors = new Random().nextInt(100);
+    final Museum museum = Museum.buildLoopyMuseum();
+    aVisitMostLikelyTerminates(museum, randNumVisitors);
+  }
+
+  @Test(timeout = 5000)
+  public void aVisitToTheScienceMuseumMostLikelyTerminates() {
+    final Museum museum = Museum.buildScienceMuseum();
+    aVisitMostLikelyTerminates(museum, 50);
+  }
+
+  @Test(timeout = 8000)
+  public void aLargeVisitToTheScienceMuseumMostLikelyTerminates() {
+    final Museum museum = Museum.buildScienceMuseum();
+    aVisitMostLikelyTerminates(museum, 500);
+  }
+
+  @Test(timeout = 8000)
+  public void aRandomeVisitToTheScienceMuseumMostLikelyTerminates() {
+    int randNumVisitors = new Random().nextInt(500);
+    final Museum museum = Museum.buildScienceMuseum();
+    aVisitMostLikelyTerminates(museum, randNumVisitors);
+  }
+
+  private void aVisitMostLikelyTerminates(Museum museum, int numOfVisitors) {
+    final int numberOfVisitors = numOfVisitors;
 
     List<Thread> visitors = new ArrayList<>();
     IntStream.range(0, numberOfVisitors).sequential().forEach(i -> {

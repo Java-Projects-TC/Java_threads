@@ -6,11 +6,11 @@ import java.util.Objects;
 
 public abstract class MuseumSite {
 
-  protected final String name;
-  protected int occupancy;
-  protected List<Turnstile> exitTurnstiles;
+  private final String name;
+  private int occupancy;
+  private List<Turnstile> exitTurnstiles;
 
-  public MuseumSite(String name) {
+  MuseumSite(String name) {
     this.name = name;
     this.occupancy = 0;
     this.exitTurnstiles = new ArrayList<>();
@@ -23,8 +23,8 @@ public abstract class MuseumSite {
   }
 
   public void exit() {
-    assert occupancy > 0;
-    occupancy--;
+      assert occupancy > 0;
+      occupancy--;
   }
 
   public void addExitTurnstile(Turnstile turnstile) {

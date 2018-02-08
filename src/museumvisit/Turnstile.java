@@ -14,8 +14,6 @@ public class Turnstile {
   }
 
   public Optional<MuseumSite> passToNextRoom() {
-    // assertions for exiting entire museum or not??
-
     // Determine ordering between the two rooms joined bt the turnstile in
     // order to remove the circular dependency;
     MuseumSite firstRoomToLock, secondRoomToLock;
